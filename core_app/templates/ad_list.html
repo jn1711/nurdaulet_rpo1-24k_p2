@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% block title %}Все объявления{% endblock %}
+
+{% block content %}
+<div class="fade-in">
+    <div class="mb-4">
+        <h1 class="page-title">Каталог объявлений</h1>
+        <p class="page-subtitle">Находите нужные товары и услуги в удобном формате.</p>
+    </div>
+
+    <div class="app-panel mb-4">
+        <div class="app-panel-inner">
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-12 col-md-6 col-xl-7">
+                    <label for="searchInput" class="form-label mb-2">Поиск</label>
+                    <input id="searchInput" type="text" name="q" class="form-control" placeholder="Я ищу..." value="{{ request.GET.q }}">
+                </div>
+                <div class="col-12 col-md-3 col-xl-3">
+                    <label for="sortSelect" class="form-label mb-2">Сортировка</label>
+                    <select id="sortSelect" name="sort" class="form-select">
+                        <option value="">Сначала новые</option>
+                        <option value="cheap" {% if request.GET.sort == 'cheap' %}selected{% endif %}>Сначала дешевые</option>
+                        <option value="expensive" {% if request.GET.sort == 'expensive' %}selected{% endif %}>Сначала дорогие</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-3 col-xl-2 d-grid">
+                    <button type="submit" class="btn btn-app btn-app-primary py-2">
+                        <i class="fa-solid fa-magnifying-glass"></i>Найти
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-12 col-lg-3">
+            <div class="app-panel h-100">
+                <div class="app-panel-inner">
+                    <h5 class="section-heading">Категории</h5>
+                    <a href="{% url 'ad_list' %}" class="category-link {% if not current_category %}active{% endif %}">
+                        <i class="fa-solid fa-globe"></i>Все категории
+                    </a>
+                    {% for cat in categories %}
+                        <a href="{% url 'category_list' cat.slug %}" class="category-link {% if current_category == cat.slug %}active{% endif %}">
+                            <i class="fa-solid fa-tag"></i>{{ cat.name }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-9">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-3 g-4">
+                {% for ad in page_obj %}
+                    <div class="col">
+                        <a href="{% url 'ad_detail' ad.uuid %}" class="ad-card ad-card-link {% if ad.is_top %}ad-card-top{% endif %}" aria-label="Открыть объявление {{ ad.title }}">
+                            {% if ad.is_top %}
+                                <span class="vip-badge"><i class="fa-solid fa-crown me-1"></i>VIP</span>
+                            {% endif %}
+
+                            {% if ad.image %}
+                                <img src="{{ ad.image.url }}" class="ad-image" alt="Фото объявления">
+                            {% else %}
+                                <div class="ad-image-placeholder">
+                                    <i class="fa-regular fa-image"></i>Нет фото
+                                </div>
+                            {% endif %}
+
+                            <div class="p-3 d-flex flex-column ad-card-body">
+                                <h6 class="mb-2">
+                                    <span class="ad-title-link">{{ ad.title }}</span>
+                                </h6>
+                                <div class="d-flex flex-column gap-1">
+                                    <span class="ad-price-pill">{% if ad.price == 0 %}Даром{% else %}{{ ad.price }} ₸{% endif %}</span>
+                                    <small class="meta-text"><i class="fa-regular fa-calendar me-1"></i>{{ ad.city.name }} | {{ ad.created_at|date:"d M" }}</small>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% empty %}
+                    <div class="col-12">
+                        <div class="empty-state">
+                            <i class="fa-regular fa-folder-open me-2"></i>Ничего не найдено
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% if page_obj.has_other_pages %}
+                <div class="d-flex justify-content-center mt-4 pagination-shell">
+                    <div class="btn-group">
+                        {% if page_obj.has_previous %}
+                            <a href="?page={{ page_obj.previous_page_number }}&{{ query_params }}" class="btn">
+                                <i class="fa-solid fa-chevron-left me-1"></i>Назад
+                            </a>
+                        {% endif %}
+                        <span class="btn current">Стр. {{ page_obj.number }}</span>
+                        {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}&{{ query_params }}" class="btn">
+                                Вперед<i class="fa-solid fa-chevron-right ms-1"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

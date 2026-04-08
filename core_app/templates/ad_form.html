@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}{% if form.instance.pk %}Редактировать{% else %}Подать объявление{% endif %}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center fade-in">
+    <div class="col-12 col-md-10 col-lg-8 col-xl-7">
+        <div class="app-panel form-panel">
+            <div class="app-panel-inner">
+                <div class="form-header">
+                    <h1 class="form-title">{% if form.instance.pk %}Редактировать объявление{% else %}Подать объявление{% endif %}</h1>
+                    <p class="form-note">Заполните основные параметры. Поля с ценой, категорией и городом доступны ниже.</p>
+                </div>
+
+                <form method="post" enctype="multipart/form-data" novalidate class="app-form">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+
+                    <div class="inline-actions mt-4 justify-content-end">
+                        <a href="{% url 'profile' %}" class="btn btn-app btn-app-outline px-4 py-2">
+                            <i class="fa-solid fa-xmark"></i>Отмена
+                        </a>
+                        <button type="submit" class="btn btn-app btn-app-primary px-4 py-2">
+                            <i class="fa-regular fa-floppy-disk"></i>Сохранить
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

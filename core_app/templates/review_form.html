@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block title %}Написать отзыв{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center fade-in">
+    <div class="col-12 col-sm-11 col-md-10 col-lg-8 col-xl-7">
+        <div class="app-panel form-panel">
+            <div class="app-panel-inner">
+                <div class="form-header">
+                    <h1 class="form-title"><i class="fa-regular fa-star me-2"></i>Оставить отзыв</h1>
+                    <p class="form-note">Поделитесь впечатлением о товаре и продавце.</p>
+                </div>
+
+                <div class="delete-preview mb-4">
+                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+                        <div>
+                            <h6 class="mb-1">{{ ad.title }}</h6>
+                            <small class="meta-text">{{ ad.city.name }}</small>
+                        </div>
+                        <div class="price mb-0">{% if ad.price == 0 %}Бесплатно{% else %}{{ ad.price }} ₸{% endif %}</div>
+                    </div>
+                </div>
+
+                <form method="post" novalidate class="app-form">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="error-text mb-3">
+                            {% for error in form.non_field_errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <div class="mb-4">
+                        <label class="form-label d-block">Оценка</label>
+                        <div class="rating-grid">
+                            {% for radio in form.rating %}
+                                {{ radio.tag }}
+                                <label for="{{ radio.id_for_label }}" class="rating-label">
+                                    <i class="fa-solid fa-star"></i>{{ radio.choice_label }}
+                                </label>
+                            {% endfor %}
+                        </div>
+                        {% if form.rating.errors %}
+                            <ul class="errorlist">
+                                {% for error in form.rating.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="id_comment" class="form-label">Комментарий</label>
+                        <textarea name="comment" id="id_comment" class="form-control" rows="6" placeholder="Опишите ваш опыт...">{{ form.comment.value|default:"" }}</textarea>
+                        {% if form.comment.errors %}
+                            <ul class="errorlist">
+                                {% for error in form.comment.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+
+                    <div class="inline-actions justify-content-end">
+                        <a href="{% url 'ad_detail' ad.uuid %}" class="btn btn-app btn-app-outline px-4 py-2">
+                            <i class="fa-solid fa-arrow-left"></i>Отмена
+                        </a>
+                        <button type="submit" class="btn btn-app btn-app-primary px-4 py-2">
+                            <i class="fa-solid fa-check"></i>Опубликовать отзыв
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Регистрация{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center fade-in">
+    <div class="col-12 col-sm-11 col-md-8 col-lg-6 col-xl-5">
+        <div class="app-panel form-panel">
+            <div class="app-panel-inner">
+                <div class="form-header">
+                    <h1 class="form-title">Регистрация</h1>
+                    <p class="form-note">Создайте профиль, чтобы публиковать объявления и сохранять избранное.</p>
+                </div>
+
+                {% if form.non_field_errors %}
+                    <div class="error-text mb-3">
+                        {% for error in form.non_field_errors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <form method="post" novalidate class="app-form">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+
+                    <div class="d-grid mt-3">
+                        <button type="submit" class="btn btn-app btn-app-primary py-2">
+                            <i class="fa-regular fa-id-card"></i>Зарегистрироваться
+                        </button>
+                    </div>
+                </form>
+
+                <hr class="my-4 border-secondary">
+                <p class="mb-0 text-center">
+                    Уже есть аккаунт? <a href="{% url 'login' %}" class="ad-title-link">Войти</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

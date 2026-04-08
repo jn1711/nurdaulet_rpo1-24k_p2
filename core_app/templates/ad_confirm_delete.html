@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Удалить объявление{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center fade-in">
+    <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+        <div class="app-panel form-panel">
+            <div class="app-panel-inner">
+                <div class="form-header">
+                    <h1 class="form-title"><i class="fa-solid fa-triangle-exclamation me-2"></i>Подтверждение удаления</h1>
+                    <p class="form-note">Проверьте данные перед окончательным удалением объявления.</p>
+                </div>
+
+                <p class="mb-2">Вы уверены, что хотите удалить объявление:</p>
+                <div class="delete-preview mb-3">
+                    <strong>{{ ad.title }}</strong>
+                    <p class="meta-text mb-0 mt-1">{{ ad.description|truncatewords:10 }}</p>
+                </div>
+
+                <p class="meta-text mb-4">Это действие нельзя отменить.</p>
+
+                <form method="post" class="inline-actions justify-content-between">
+                    {% csrf_token %}
+                    <a href="{% url 'profile' %}" class="btn btn-app btn-app-outline px-4 py-2">
+                        <i class="fa-solid fa-arrow-left"></i>Отмена
+                    </a>
+                    <button type="submit" class="btn btn-app btn-app-danger px-4 py-2">
+                        <i class="fa-regular fa-trash-can"></i>Удалить объявление
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
