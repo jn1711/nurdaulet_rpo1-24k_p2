@@ -2,65 +2,55 @@
 {% block title %}Мой профиль{% endblock %}
 
 {% block content %}
-<div class="fade-in">
-    <div class="mb-4">
-        <h1 class="page-title">Профиль</h1>
-        <p class="page-subtitle">Здравствуйте, {{ user.first_name|default:user.username }}. Управляйте объявлениями и избранным.</p>
-    </div>
+<h2 class="fw-bold mb-4">Привет, {{ user.first_name|default:user.username }}!</h2>
 
-    <div class="row g-4">
-        <div class="col-12 col-xl-7">
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
-                <h4 class="mb-0">Мои объявления ({{ my_ads.count }})</h4>
-            </div>
-
-            <div class="app-panel">
-                <div class="app-panel-inner">
-                    {% for ad in my_ads %}
-                        <div class="list-row mb-3">
-                            <div class="d-flex justify-content-between align-items-start gap-3 flex-wrap">
-                                <div>
-                                    <h5 class="mb-1"><a href="{% url 'ad_detail' ad.uuid %}" class="ad-title-link">{{ ad.title }}</a></h5>
-                                    <p class="price mb-2">{{ ad.price }} ₸</p>
-                                    {% if ad.is_moderated %}
-                                        <span class="status-badge active"><i class="fa-solid fa-circle-check"></i>Активно</span>
-                                    {% else %}
-                                        <span class="status-badge pending"><i class="fa-solid fa-hourglass-half"></i>На проверке</span>
-                                    {% endif %}
-                                </div>
-                                <a href="{% url 'ad_update' ad.uuid %}" class="btn btn-app btn-app-neutral px-3 py-2">
-                                    <i class="fa-regular fa-pen-to-square"></i>Редактировать
-                                </a>
+<div class="row g-4">
+    <!-- Мои объявления -->
+    <div class="col-md-7">
+        <h4 class="fw-bold mb-3">Мои объявления ({{ my_ads.count }})</h4>
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="list-group list-group-flush rounded-4">
+                {% for ad in my_ads %}
+                    <div class="list-group-item p-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-1"><a href="{% url 'ad_detail' ad.uuid %}" class="text-dark text-decoration-none">{{ ad.title }}</a></h5>
+                                <p class="text-danger fw-bold mb-1">{{ ad.price }} ₸</p>
+                                {% if ad.is_moderated %}
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle">Активно</span>
+                                {% else %}
+                                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle">На проверке</span>
+                                {% endif %}
                             </div>
+                            <a href="{% url 'ad_update' ad.uuid %}" class="btn btn-light btn-sm">Редактировать</a>
                         </div>
-                    {% empty %}
-                        <div class="empty-state">У вас пока нет объявлений.</div>
-                    {% endfor %}
-                </div>
+                    </div>
+                {% empty %}
+                    <div class="p-5 text-center text-muted">У вас еще нет объявлений.</div>
+                {% endfor %}
             </div>
         </div>
+    </div>
 
-        <div class="col-12 col-xl-5">
-            <h4 class="mb-3">Избранное ({{ favorites.count }})</h4>
-            <div class="app-panel">
-                <div class="app-panel-inner">
-                    {% for fav in favorites %}
-                        <div class="list-row mb-3">
-                            <div class="d-flex justify-content-between align-items-center gap-2">
-                                <div>
-                                    <h6 class="mb-1"><a href="{% url 'ad_detail' fav.ad.uuid %}" class="ad-title-link">{{ fav.ad.title }}</a></h6>
-                                    <p class="price mb-0">{{ fav.ad.price }} ₸</p>
-                                </div>
-                                <a href="{% url 'toggle_favorite' fav.ad.uuid %}" class="btn btn-app btn-app-outline px-3 py-2">
-                                    <i class="fa-solid fa-heart"></i>
-                                </a>
+    <!-- Избранное -->
+    <div class="col-md-5">
+        <h4 class="fw-bold mb-3">Избранное ({{ favorites.count }})</h4>
+        <div class="row row-cols-1 g-3">
+            {% for fav in favorites %}
+                <div class="col">
+                    <div class="card border-0 shadow-sm rounded-4 h-100">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1 text-truncate" style="max-width: 200px;"><a href="{% url 'ad_detail' fav.ad.uuid %}" class="text-dark text-decoration-none">{{ fav.ad.title }}</a></h6>
+                                <p class="text-danger fw-bold mb-0">{{ fav.ad.price }} ₸</p>
                             </div>
+                            <a href="{% url 'toggle_favorite' fav.ad.uuid %}" class="btn btn-light text-danger rounded-circle">♥</a>
                         </div>
-                    {% empty %}
-                        <div class="empty-state">Список избранного пока пуст.</div>
-                    {% endfor %}
+                    </div>
                 </div>
-            </div>
+            {% empty %}
+                <div class="col-12 p-4 text-center bg-white rounded-4 shadow-sm text-muted">Тут пока пусто.</div>
+            {% endfor %}
         </div>
     </div>
 </div>
