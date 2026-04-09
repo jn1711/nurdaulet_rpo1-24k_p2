@@ -2,389 +2,184 @@
 {% block title %}Написать отзыв{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
 <style>
-    :root {
-        --dark-bg: #141619;
-        --dark-secondary: #2C2E3A;
-        --dark-accent: #050A44;
-        --primary-blue: #0A21C0;
-        --light-gray: #B3B4BD;
+    .review-form-wrap {
+        max-width: 760px;
+        margin: 0 auto;
     }
 
-    * {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .review-container {
-        min-height: 100vh;
-        background: linear-gradient(135deg, #141619 0%, #2C2E3A 100%);
-        padding: 2rem 1rem;
-    }
-
-    .review-card {
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 10px 40px rgba(5, 10, 68, 0.15);
+    .review-form-card {
+        border: 0;
+        border-radius: 18px;
+        box-shadow: 0 12px 36px rgba(0, 0, 0, 0.1);
         overflow: hidden;
-        border-left: 4px solid var(--primary-blue);
     }
 
-    .review-header {
-        background: linear-gradient(135deg, var(--dark-accent) 0%, var(--primary-blue) 100%);
-        padding: 2.5rem 1.5rem;
-        color: white;
+    .review-form-head {
+        background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%);
+        color: #fff;
+        padding: 28px;
     }
 
-    .review-header h2 {
-        font-size: 1.75rem;
-        font-weight: 700;
+    .review-form-head h2 {
         margin: 0;
-        letter-spacing: -0.5px;
+        font-weight: 700;
     }
 
-    .review-header p {
+    .review-form-head p {
+        margin: 8px 0 0;
         opacity: 0.9;
-        margin: 0.5rem 0 0 0;
-        font-size: 0.95rem;
     }
 
-    .ad-preview {
-        background: var(--dark-secondary);
-        border-radius: 8px;
-        padding: 1.25rem;
-        margin-bottom: 2rem;
-        border-left: 3px solid var(--primary-blue);
+    .ad-preview-box {
+        border: 1px solid #dee2e6;
+        border-radius: 12px;
+        background: #f8f9fa;
+        padding: 14px 16px;
+        margin-bottom: 24px;
     }
 
-    .ad-preview-title {
-        color: var(--dark-bg);
-        font-size: 1rem;
-        font-weight: 600;
-        margin: 0 0 0.5rem 0;
+    .ad-preview-box h6 {
+        margin: 0 0 6px;
+        font-weight: 700;
     }
 
     .ad-preview-price {
-        color: var(--primary-blue);
+        color: #dc3545;
         font-weight: 700;
-        font-size: 1.25rem;
-    }
-
-    .form-group {
-        margin-bottom: 2rem;
     }
 
     .form-label {
-        display: block;
         font-weight: 600;
-        font-size: 0.95rem;
-        color: var(--dark-bg);
-        margin-bottom: 1rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+        margin-bottom: 8px;
     }
 
-    .rating-wrapper {
+    .rating-row {
         display: flex;
-        gap: 1rem;
-        justify-content: flex-start;
+        gap: 10px;
         flex-wrap: wrap;
+        margin-bottom: 20px;
     }
 
-    .rating-input {
+    .rating-row input[type="radio"] {
         display: none;
     }
 
-    .star-rating {
-        position: relative;
-        display: inline-flex;
-        flex-direction: row-reverse;
-        gap: 0.5rem;
-    }
-
-    .star-rating input {
-        display: none;
-    }
-
-    .star-label {
+    .rating-row label {
+        padding: 8px 14px;
+        border: 1px solid #ced4da;
+        border-radius: 999px;
+        background: #fff;
         cursor: pointer;
-        font-size: 2.5rem;
-        color: #e0e0e0;
-        transition: all 0.2s ease;
-        padding: 0.5rem;
-        border-radius: 8px;
+        font-weight: 600;
+        color: #495057;
+        transition: 0.2s ease;
     }
 
-    .star-label:hover,
-    .star-label:hover ~ .star-label,
-    .star-rating input:checked ~ .star-label {
-        color: var(--primary-blue);
-        transform: scale(1.15);
+    .rating-row label:hover {
+        border-color: #dc3545;
+        color: #dc3545;
     }
 
-    .star-label i {
-        display: block;
+    .rating-row input[type="radio"]:checked + label {
+        background: #dc3545;
+        border-color: #dc3545;
+        color: #fff;
     }
 
     textarea.form-control {
-        width: 100%;
-        padding: 1rem;
-        border: 2px solid #e0e0e0;
-        border-radius: 8px;
-        font-family: inherit;
-        font-size: 1rem;
-        color: var(--dark-bg);
-        background: white;
-        resize: vertical;
-        min-height: 150px;
+        border-radius: 10px;
+        min-height: 140px;
     }
 
-    textarea.form-control:focus {
-        border-color: var(--primary-blue);
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(10, 33, 192, 0.1);
-        background: white;
-    }
-
-    textarea.form-control::placeholder {
-        color: var(--light-gray);
-    }
-
-    .form-actions {
+    .review-actions {
         display: flex;
-        gap: 1rem;
         justify-content: flex-end;
-        margin-top: 2.5rem;
-        padding-top: 2rem;
-        border-top: 1px solid #e0e0e0;
-    }
-
-    .btn-base {
-        padding: 0.75rem 1.75rem;
-        border-radius: 8px;
-        font-weight: 600;
-        font-size: 0.95rem;
-        border: none;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        text-decoration: none;
-        transition: all 0.3s ease;
-    }
-
-    .btn-cancel {
-        background: var(--dark-secondary);
-        color: white;
-    }
-
-    .btn-cancel:hover {
-        background: var(--dark-accent);
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(5, 10, 68, 0.2);
-    }
-
-    .btn-submit {
-        background: linear-gradient(135deg, var(--primary-blue) 0%, #0018a0 100%);
-        color: white;
-    }
-
-    .btn-submit:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(10, 33, 192, 0.3);
-    }
-
-    .btn-submit:active {
-        transform: translateY(0);
-    }
-
-    .alert {
-        border-radius: 8px;
-        border-left: 4px solid;
-        padding: 1rem;
-        margin-bottom: 1.5rem;
-        font-size: 0.95rem;
-    }
-
-    .alert-danger {
-        background: #fee;
-        border-color: #e74c3c;
-        color: #c0392b;
+        gap: 10px;
+        margin-top: 20px;
     }
 
     .error-list {
-        margin: 0;
-        padding-left: 1.5rem;
+        margin: 8px 0 0;
+        color: #dc3545;
+        padding-left: 18px;
     }
 
-    .error-list li {
-        margin: 0.25rem 0;
-    }
-
-    /* Адаптивный дизайн */
-    @media (max-width: 768px) {
-        .review-header {
-            padding: 2rem 1.25rem;
+    @media (max-width: 576px) {
+        .review-form-head {
+            padding: 20px;
         }
 
-        .review-header h2 {
-            font-size: 1.5rem;
-        }
-
-        .review-card {
-            border-left-width: 3px;
-        }
-
-        .form-actions {
+        .review-actions {
             flex-direction: column;
-            gap: 0.75rem;
         }
 
-        .btn-base {
+        .review-actions .btn {
             width: 100%;
-            justify-content: center;
-        }
-
-        .star-label {
-            font-size: 2rem;
-        }
-
-        .ad-preview {
-            padding: 1rem;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .review-container {
-            padding: 1rem 0.75rem;
-        }
-
-        .review-header {
-            padding: 1.5rem 1rem;
-        }
-
-        .review-header h2 {
-            font-size: 1.25rem;
-        }
-
-        .form-label {
-            font-size: 0.85rem;
-        }
-
-        .star-label {
-            font-size: 1.75rem;
-            padding: 0.25rem;
-        }
-
-        textarea.form-control {
-            min-height: 120px;
-            padding: 0.75rem;
-        }
-
-        .btn-base {
-            padding: 0.65rem 1.25rem;
-            font-size: 0.9rem;
-        }
-    }
-
-    /* Дополнительные эффекты */
-    .form-group:hover .form-label {
-        color: var(--primary-blue);
-    }
-
-    .review-card {
-        animation: slideUp 0.4s ease;
-    }
-
-    @keyframes slideUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
         }
     }
 </style>
 
-<div class="review-container">
-    <div class="container">
-        <div class="row">
-            <div class="col-12 col-sm-11 col-md-10 col-lg-8 col-xl-7 mx-auto">
-                <div class="review-card">
-                    <div class="review-header">
-                        <h2><i class="fas fa-star"></i> Оставить отзыв</h2>
-                        <p>Поделитесь своим впечатлением о товаре</p>
-                    </div>
+<div class="review-form-wrap mt-3 mb-5">
+    <div class="card review-form-card">
+        <div class="review-form-head">
+            <h2>Оставить отзыв</h2>
+            <p>Поделитесь своим впечатлением о товаре</p>
+        </div>
 
-                    <div style="padding: 2.5rem 1.5rem;">
-                        <div class="ad-preview">
-                            <div class="ad-preview-title"><i class="fas fa-box"></i> {{ ad.title }}</div>
-                            <div class="ad-preview-price"><i class="fas fa-tag"></i> {% if ad.price == 0 %}Бесплатно{% else %}{{ ad.price }} ₸{% endif %}</div>
-                        </div>
-
-                        <form method="post" novalidate>
-                            {% csrf_token %}
-
-                            {% if form.non_field_errors %}
-                                <div class="alert alert-danger">
-                                    {% for error in form.non_field_errors %}
-                                        <p class="mb-0"><i class="fas fa-exclamation-circle"></i> {{ error }}</p>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-
-                            <div class="form-group">
-                                <label class="form-label"><i class="fas fa-star"></i> Оценка</label>
-                                <div class="rating-wrapper">
-                                    {% for radio in form.rating %}
-                                        <div class="star-rating">
-                                            {{ radio.tag }}
-                                            <label for="{{ radio.id_for_label }}" class="star-label" title="{{ radio.choice_label }}">
-                                                <i class="fas fa-star"></i>
-                                            </label>
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                                {% if form.rating.errors %}
-                                    <div class="alert alert-danger" style="margin-top: 1rem;">
-                                        <ul class="error-list">
-                                            {% for error in form.rating.errors %}
-                                                <li><i class="fas fa-times-circle"></i> {{ error }}</li>
-                                            {% endfor %}
-                                        </ul>
-                                    </div>
-                                {% endif %}
-                            </div>
-
-                            <div class="form-group">
-                                <label for="id_comment" class="form-label"><i class="fas fa-comments"></i> Комментарий</label>
-                                <textarea name="comment" id="id_comment" class="form-control" placeholder="Расскажите о вашем опыте с этим товаром...">{{ form.comment.value|default:"" }}</textarea>
-                                {% if form.comment.errors %}
-                                    <div class="alert alert-danger" style="margin-top: 1rem;">
-                                        <ul class="error-list">
-                                            {% for error in form.comment.errors %}
-                                                <li><i class="fas fa-times-circle"></i> {{ error }}</li>
-                                            {% endfor %}
-                                        </ul>
-                                    </div>
-                                {% endif %}
-                            </div>
-
-                            <div class="form-actions">
-                                <a href="{% url 'ad_detail' ad.uuid %}" class="btn-base btn-cancel">
-                                    <i class="fas fa-times"></i> Отмена
-                                </a>
-                                <button type="submit" class="btn-base btn-submit">
-                                    <i class="fas fa-check"></i> Опубликовать отзыв
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+        <div class="card-body p-4 p-md-5">
+            <div class="ad-preview-box">
+                <h6>{{ ad.title }}</h6>
+                <div class="ad-preview-price">{% if ad.price == 0 %}Бесплатно{% else %}{{ ad.price }} ₸{% endif %}</div>
             </div>
+
+            <form method="post" novalidate>
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <div class="mb-3">
+                    <label class="form-label">Оценка</label>
+                    <div class="rating-row">
+                        {% for radio in form.rating %}
+                            {% if radio.choice_label != '---------' %}
+                                {{ radio.tag }}
+                                <label for="{{ radio.id_for_label }}">{{ radio.choice_label }} ★</label>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% if form.rating.errors %}
+                        <ul class="error-list">
+                            {% for error in form.rating.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_comment" class="form-label">Комментарий</label>
+                    <textarea name="comment" id="id_comment" class="form-control" placeholder="Расскажите о вашем опыте с этим товаром...">{{ form.comment.value|default:"" }}</textarea>
+                    {% if form.comment.errors %}
+                        <ul class="error-list">
+                            {% for error in form.comment.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+
+                <div class="review-actions">
+                    <a href="{% url 'ad_detail' ad.uuid %}" class="btn btn-outline-secondary">Отмена</a>
+                    <button type="submit" class="btn btn-danger">Опубликовать отзыв</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
